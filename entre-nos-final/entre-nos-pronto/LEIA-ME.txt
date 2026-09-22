@@ -1,0 +1,18 @@
+ENTRE NÓS — VERSÃO FINAL (PROTÓTIPO OFFLINE)
+
+COMO ABRIR
+1. Abra esta pasta no VS Code.
+2. Clique duas vezes em ABRIR-SITE.bat, ou abra index.html no navegador.
+3. Não precisa de npm, Vite, React ou instalação.
+
+CONTA ADMIN PARA TESTE
+E-mail: admin@entrenos.local
+Senha: admin123
+
+TIPOS DE CONTA
+- Funcionário: notas, calendário, avaliações, histórico, empresas e perfil.
+- Patrão/Empresa: perfil da empresa, comentários públicos, empresas e perfil pessoal.
+- Admin: gerenciamento de contas e avaliações, diretório de empresas e perfil.
+
+IMPORTANTE
+Esta é uma versão de demonstração local. Contas, senhas e dados são armazenados no localStorage do navegador. Isso é adequado para protótipo/apresentação, mas NÃO para publicar como sistema real. Uma versão pública precisa de backend, banco de dados, autenticação segura e regras de acesso no servidor.
