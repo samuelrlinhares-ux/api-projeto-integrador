@@ -2,6 +2,16 @@
 
 Projeto organizado para o VS Code com frontend, backend, banco e rotas separados.
 
+## Identidade visual
+
+Logo compacta, usada no ícone do sistema e em espaços pequenos:
+
+<img src="public/img/logo-minimalista.png" alt="Logo compacta do Diário do Trabalhador" width="220">
+
+Logo completa:
+
+<img src="public/img/logo-completa.png" alt="Logo completa do Diário do Trabalhador" width="480">
+
 ## Estrutura
 
 ```text

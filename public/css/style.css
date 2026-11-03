@@ -81,7 +81,7 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 
 /* ---------- Marca ---------- */
 .marca { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.logo { width: 38px; height: 38px; flex: none; border-radius: 10px; display: grid; place-items: center; background: var(--primaria); color: #fff; font-size: 14px; font-weight: 800; letter-spacing: .02em; }
+.logo { width: 58px; height: 38px; flex: none; border-radius: 8px; display: grid; place-items: center; overflow: hidden; background: #000 url('/img/logo-minimalista.png') center / 100% 100% no-repeat; color: transparent; font-size: 0; }
 .marca-nome { font-weight: 800; font-size: 18px; letter-spacing: -.02em; }
 
 /* ---------- Landing ---------- */
@@ -93,6 +93,9 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 .faixa-fechar:hover { background: rgba(255, 255, 255, .1); }
 
 .landing-topo { max-width: 1200px; margin: 0 auto; padding: 18px 32px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; }
+.landing-topo .marca { position: relative; width: 240px; height: 82px; }
+.landing-topo .marca::before { content: ""; position: absolute; inset: 0; border-radius: 8px; background: url('/img/logo-completa-transparente.png') center / cover no-repeat; }
+.landing-topo .marca .logo, .landing-topo .marca-nome { display: none; }
 .landing-links { display: flex; gap: 36px; }
 .landing-links a { text-decoration: none; color: var(--tinta-2); font-weight: 500; transition: color .15s var(--ease); }
 .landing-links a:hover { color: var(--primaria); }
