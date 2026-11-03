@@ -103,6 +103,9 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 .hero-lead { font-size: 18px; color: var(--tinta-2); margin: 0 0 32px; max-width: 52ch; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
 .hero-garantia { display: flex; align-items: center; gap: 10px; color: var(--tinta-3); font-size: 14px; margin: 20px 0 0; }
+.hero-beneficios { display: grid; gap: 7px; list-style: none; margin: 12px 0 0 32px; padding: 0; color: var(--tinta-3); font-size: 14px; font-weight: 400; }
+.hero-beneficios li { position: relative; }
+.hero-beneficios li::before { content: "✓"; position: absolute; left: -32px; top: 0; display: grid; width: 22px; height: 22px; place-items: center; border-radius: 50%; background: var(--fundo-2); color: var(--sucesso); font-size: 12px; font-weight: 800; line-height: 1; }
 .check-icone { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--fundo-2); color: var(--sucesso); font-size: 12px; font-weight: 800; }
 
 .hero-visual { position: relative; display: flex; justify-content: flex-end; min-height: 0; align-items: center; }
