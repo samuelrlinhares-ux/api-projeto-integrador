@@ -106,8 +106,8 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 .check-icone { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--fundo-2); color: var(--sucesso); font-size: 12px; font-weight: 800; }
 
 .hero-visual { position: relative; display: flex; justify-content: flex-end; min-height: 560px; align-items: center; }
-.foto-hero { position: absolute; left: 0; top: 24px; width: 52%; aspect-ratio: 4 / 5; margin: 0; border-radius: var(--raio-g); overflow: hidden; background: linear-gradient(160deg, var(--primaria-suave), var(--fundo-2)); box-shadow: var(--sombra); }
-.foto-hero img { width: 100%; height: 100%; object-fit: cover; }
+.foto-hero { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border-radius: var(--raio-g); overflow: hidden; background: linear-gradient(160deg, var(--primaria-suave), var(--fundo-2)); box-shadow: var(--sombra); }
+.foto-hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
 .sem-imagem img { display: none; }
 .chip-humor { position: absolute; left: 12px; bottom: 12px; white-space: nowrap; background: var(--superficie); border-radius: var(--raio); padding: 10px 12px; font-size: 13px; color: var(--tinta-2); box-shadow: var(--sombra); }
 .chip-humor span { margin-right: 4px; }
@@ -264,7 +264,7 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
   .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 24px; }
   .hero h1 { max-width: 18ch; }
   .hero-visual { min-height: 0; justify-content: center; }
-  .foto-hero { display: none; }
+  .foto-hero { position: relative; inset: auto; width: 100%; height: auto; aspect-ratio: 16 / 10; }
   .login-caixa { max-width: 520px; }
   .recursos { grid-template-columns: 1fr; gap: 40px; padding: 64px 32px; }
   .calendario-layout { grid-template-columns: 1fr; }
