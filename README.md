@@ -93,3 +93,9 @@ ALTER TABLE contas DROP INDEX ip_cadastro;
 ```
 
 O mesmo comando está em `database/atualizar-sem-ip-unico.sql`.
+
+## Créditos das imagens
+
+- `public/img/hero-pessoa.jpg`: foto de [Vitaly Gariev](https://unsplash.com/photos/young-woman-smiling-while-using-her-smartphone-at-desk-5RQnUp_-5OU) / Unsplash
+- `public/img/equipe.jpg`: foto de [Vitaly Gariev](https://unsplash.com/photos/diverse-team-collaborates-around-a-table-in-office-fm4B1xWEIsU) / Unsplash
+- `public/img/og-capa.jpg` e `public/favicon.png`: feitos para o projeto, com a paleta do site

@@ -100,7 +100,7 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 .link-entrar { background: none; border: 0; color: var(--tinta); font-weight: 600; padding: 8px 4px; }
 .link-entrar:hover { color: var(--primaria); }
 
-.hero { max-width: 1200px; margin: 0 auto; padding: 48px 32px 72px; display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
+.hero { max-width: 1200px; margin: 0 auto; padding: 48px 32px 72px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: center; }
 .hero h1 { font-size: clamp(36px, 5vw, 56px); font-weight: 800; margin: 0 0 20px; max-width: 13ch; }
 .sublinhado { background: linear-gradient(transparent 82%, var(--destaque) 82%, var(--destaque) 94%, transparent 94%); }
 .hero-lead { font-size: 18px; color: var(--tinta-2); margin: 0 0 32px; max-width: 52ch; }
@@ -109,10 +109,10 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 .check-icone { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--fundo-2); color: var(--sucesso); font-size: 12px; font-weight: 800; }
 
 .hero-visual { position: relative; display: flex; justify-content: flex-end; min-height: 560px; align-items: center; }
-.foto-hero { position: absolute; left: 0; top: 24px; width: 46%; aspect-ratio: 4 / 5; margin: 0; border-radius: var(--raio-g); overflow: hidden; background: linear-gradient(160deg, var(--primaria-suave), var(--fundo-2)); box-shadow: var(--sombra); }
+.foto-hero { position: absolute; left: 0; top: 24px; width: 52%; aspect-ratio: 4 / 5; margin: 0; border-radius: var(--raio-g); overflow: hidden; background: linear-gradient(160deg, var(--primaria-suave), var(--fundo-2)); box-shadow: var(--sombra); }
 .foto-hero img { width: 100%; height: 100%; object-fit: cover; }
 .sem-imagem img { display: none; }
-.chip-humor { position: absolute; left: 12px; right: 12px; bottom: 12px; background: var(--superficie); border-radius: var(--raio); padding: 10px 12px; font-size: 13px; color: var(--tinta-2); box-shadow: var(--sombra); }
+.chip-humor { position: absolute; left: 12px; bottom: 12px; white-space: nowrap; background: var(--superficie); border-radius: var(--raio); padding: 10px 12px; font-size: 13px; color: var(--tinta-2); box-shadow: var(--sombra); }
 .chip-humor span { margin-right: 4px; }
 
 .login-caixa { position: relative; width: 100%; max-width: 420px; padding: 28px; background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio-g); box-shadow: var(--sombra); scroll-margin-top: 24px; }
@@ -149,6 +149,7 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 
 .rodape { color: var(--tinta-3); text-align: center; border-top: 1px solid var(--borda); padding: 24px; font-size: 13px; }
 .rodape span { margin: 0 6px; color: var(--borda-forte); }
+.rodape a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
 /* ---------- Aplicativo ---------- */
 .topo { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--superficie) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borda); }
