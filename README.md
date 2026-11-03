@@ -81,6 +81,20 @@ npm start
 
 Abra `http://localhost:3000`.
 
+## Usar no computador onde o MySQL está instalado
+
+Para o site funcionar sem configurar acesso remoto ao banco, rode a API no mesmo computador do seu amigo que já tem o MySQL. Nesse computador:
+
+1. Abra a pasta do projeto no terminal.
+2. Confira `src/config/database.json` ou crie `.env` a partir de `.env.example`. Use as credenciais locais do MySQL; normalmente `DB_HOST=localhost` e `DB_PORT=3306`.
+3. Se o banco ainda não tiver as tabelas, execute `database/schema.sql` no MySQL Workbench.
+4. Rode `npm install` (se ainda não instalou as dependências) e `npm run dev`.
+5. Abra `http://localhost:3000` nesse computador.
+
+O servidor escuta a rede local também. Para abrir o site em outro computador conectado à mesma rede, descubra o IPv4 do computador que está rodando a API com `ipconfig` e acesse `http://IP-DO-COMPUTADOR:3000` (por exemplo, `http://192.168.0.25:3000`). Se o Windows Firewall perguntar, permita o Node.js em redes privadas. O computador que hospeda a API precisa permanecer ligado e com o MySQL iniciado.
+
+Se a senha do MySQL não estiver vazia, informe-a em `DB_PASSWORD` no `.env`; não compartilhe esse arquivo. Para restringir a API ao próprio computador, defina `APP_HOST=127.0.0.1` no `.env`.
+
 ## Atualização importante: várias contas no mesmo computador
 
 A regra de uma conta por IP foi removida. Agora é possível criar dono, gerente e funcionário no mesmo computador. O usuário continua precisando ser único.
