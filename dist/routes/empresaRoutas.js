@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const AvaliacaoController_1 = require("../controllers/AvaliacaoController");
+const EmpresaController_1 = require("../controllers/EmpresaController");
+const auth_1 = require("../middlewares/auth");
+const router = (0, express_1.Router)();
+router.post('/avaliacoes', auth_1.autenticar, AvaliacaoController_1.AvaliacaoController.criar);
+router.get('/resultados', auth_1.autenticar, AvaliacaoController_1.AvaliacaoController.minhas);
+router.get('/empresa', auth_1.autenticar, auth_1.somenteGestor, EmpresaController_1.EmpresaController.painel);
+exports.default = router;
