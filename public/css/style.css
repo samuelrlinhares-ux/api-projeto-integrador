@@ -92,13 +92,10 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 .faixa-fechar { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; border: 0; background: transparent; color: #e8ecf6; font-size: 22px; line-height: 1; border-radius: 6px; }
 .faixa-fechar:hover { background: rgba(255, 255, 255, .1); }
 
-.landing-topo { max-width: 1200px; margin: 0 auto; padding: 18px 32px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; }
+.landing-topo { max-width: 1200px; margin: 0 auto; padding: 18px 32px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; }
 .landing-links { display: flex; gap: 36px; }
 .landing-links a { text-decoration: none; color: var(--tinta-2); font-weight: 500; transition: color .15s var(--ease); }
 .landing-links a:hover { color: var(--primaria); }
-.landing-acoes { display: flex; align-items: center; justify-content: flex-end; gap: 20px; }
-.link-entrar { background: none; border: 0; color: var(--tinta); font-weight: 600; padding: 8px 4px; }
-.link-entrar:hover { color: var(--primaria); }
 
 .hero { max-width: 1200px; margin: 0 auto; padding: 48px 32px 72px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: center; }
 .hero h1 { font-size: clamp(36px, 5vw, 56px); font-weight: 800; margin: 0 0 20px; max-width: 13ch; }
@@ -116,6 +113,11 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 .chip-humor span { margin-right: 4px; }
 
 .login-caixa { position: relative; width: 100%; max-width: 420px; padding: 28px; background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio-g); box-shadow: var(--sombra); scroll-margin-top: 24px; }
+.modal-acesso { width: min(420px, calc(100vw - 32px)); max-width: none; max-height: calc(100vh - 32px); margin: auto; padding: 0; overflow: auto; border: 0; background: transparent; color: inherit; }
+.modal-acesso::backdrop { background: rgba(9, 14, 28, .68); backdrop-filter: blur(3px); }
+.modal-acesso .login-caixa { max-width: none; }
+.modal-fechar { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--fundo-2); color: var(--tinta-2); font-size: 22px; line-height: 1; }
+.modal-fechar:hover { background: var(--borda); color: var(--tinta); }
 .login-titulo { font-size: 22px; margin: 0 0 4px; }
 .login-caixa > p { color: var(--tinta-3); font-size: 14px; margin: 0; }
 .login-caixa .botao { width: 100%; }
@@ -257,7 +259,7 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
 
 /* ---------- Responsivo ---------- */
 @media (max-width: 980px) {
-  .landing-topo { grid-template-columns: 1fr auto; }
+  .landing-topo { grid-template-columns: 1fr; }
   .landing-links { display: none; }
   .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 24px; }
   .hero h1 { max-width: 18ch; }
@@ -274,7 +276,6 @@ input[type="range"] { width: 100%; accent-color: var(--primaria); }
   .faixa-anuncio { padding: 10px 48px 10px 16px; font-size: 13px; justify-content: flex-start; text-align: left; }
   .faixa-botao { display: none; }
   .landing-topo { padding: 14px 16px; }
-  .landing-acoes .principal { display: none; }
   .hero, .recursos, .faixa-papeis { padding-left: 16px; padding-right: 16px; }
   .hero-lead { font-size: 16px; }
   .hero-cta .botao { flex: 1 1 100%; }

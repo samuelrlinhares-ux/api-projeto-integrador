@@ -33,10 +33,6 @@
         <a href="#papeis">Para quem é</a>
         <a href="#como-funciona">Como funciona</a>
       </nav>
-      <div class="landing-acoes">
-        <button type="button" class="link-entrar" data-ir="login">Entrar</button>
-        <button type="button" class="botao principal" data-ir="cadastro">Criar conta</button>
-      </div>
     </header>
 
     <main>
@@ -57,8 +53,10 @@
             <figcaption class="chip-humor" aria-hidden="true"><span>😊</span> Hoje: <b>Bem</b> · 8/10</figcaption>
           </figure>
 
+          <dialog id="modal-acesso" class="modal-acesso" aria-labelledby="titulo-acesso">
           <div class="login-caixa" id="caixa-acesso">
-            <h2 class="login-titulo">Acesse sua conta</h2>
+            <button type="button" id="fechar-acesso" class="modal-fechar" aria-label="Fechar">&times;</button>
+            <h2 id="titulo-acesso" class="login-titulo">Acesse sua conta</h2>
             <p id="texto-acesso">Crie sua conta para começar.</p>
             <div class="abas-acesso" role="tablist"><button id="aba-cadastro" class="aba-acesso ativo" type="button">Criar conta</button><button id="aba-login" class="aba-acesso" type="button">Entrar</button></div>
             <form id="form-cadastro" class="formulario">
@@ -78,6 +76,7 @@
             </form>
             <p class="aviso-acesso">Guarde seu usuário e sua senha: eles são o seu acesso.</p>
           </div>
+          </dialog>
         </div>
       </section>
 
@@ -113,7 +112,6 @@
           <li><b>Chame a equipe</b> para se cadastrar com o mesmo CNPJ.</li>
           <li><b>Registre o dia</b> e acompanhe os resultados.</li>
         </ol>
-        <button type="button" class="botao principal grande" data-ir="cadastro">Criar conta gratuita</button>
       </section>
     </main>
 

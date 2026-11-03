@@ -16,16 +16,31 @@ function formatarCnpj(cnpj) { const n = String(cnpj || '').replace(/\D/g, ''); r
 function escapar(texto) { return String(texto || '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[c])); }
 
 const abaCadastro = document.getElementById('aba-cadastro'), abaLogin = document.getElementById('aba-login');
-abaCadastro.onclick = () => { abaCadastro.classList.add('ativo'); abaLogin.classList.remove('ativo'); document.getElementById('form-cadastro').classList.remove('escondido'); document.getElementById('form-login').classList.add('escondido'); document.getElementById('texto-acesso').textContent = 'Crie sua conta para começar.'; };
-abaLogin.onclick = () => { abaLogin.classList.add('ativo'); abaCadastro.classList.remove('ativo'); document.getElementById('form-login').classList.remove('escondido'); document.getElementById('form-cadastro').classList.add('escondido'); document.getElementById('texto-acesso').textContent = 'Entre com os dados da sua conta.'; };
+const modalAcesso = document.getElementById('modal-acesso');
+function selecionarAbaAcesso(modo) {
+  const cadastro = modo === 'cadastro';
+  abaCadastro.classList.toggle('ativo', cadastro);
+  abaLogin.classList.toggle('ativo', !cadastro);
+  document.getElementById('form-cadastro').classList.toggle('escondido', !cadastro);
+  document.getElementById('form-login').classList.toggle('escondido', cadastro);
+  document.getElementById('texto-acesso').textContent = cadastro ? 'Crie sua conta para começar.' : 'Entre com os dados da sua conta.';
+}
+abaCadastro.onclick = () => selecionarAbaAcesso('cadastro');
+abaLogin.onclick = () => selecionarAbaAcesso('login');
+document.querySelectorAll('[data-ir]').forEach(botao => botao.addEventListener('click', () => {
+  selecionarAbaAcesso(botao.dataset.ir);
+  modalAcesso.showModal();
+  document.querySelector(botao.dataset.ir === 'login' ? '#usuario' : '#cad-nome').focus();
+}));
+document.getElementById('fechar-acesso').onclick = () => modalAcesso.close();
+modalAcesso.addEventListener('click', evento => { if (evento.target === modalAcesso) modalAcesso.close(); });
 
-document.querySelectorAll('[data-ir]').forEach(botao => botao.onclick = () => { (botao.dataset.ir === 'login' ? abaLogin : abaCadastro).click(); const caixa = document.getElementById('caixa-acesso'); caixa.scrollIntoView({ behavior: 'smooth', block: 'center' }); caixa.classList.remove('destaque-pulso'); void caixa.offsetWidth; caixa.classList.add('destaque-pulso'); setTimeout(() => document.querySelector(botao.dataset.ir === 'login' ? '#usuario' : '#cad-nome').focus({ preventScroll: true }), 350); });
 document.getElementById('fechar-anuncio').onclick = () => document.getElementById('faixa-anuncio').remove();
 
 document.getElementById('form-cadastro').onsubmit = async e => { e.preventDefault(); try { await api('/api/cadastro', { method:'POST', body: JSON.stringify({ nome: document.getElementById('cad-nome').value, usuario: document.getElementById('cad-usuario').value, senha: document.getElementById('cad-senha').value, cnpj: document.getElementById('cad-cnpj').value, tipo: document.getElementById('cad-tipo').value }) }); document.getElementById('erro-cadastro').className = 'mensagem'; document.getElementById('erro-cadastro').textContent = 'Conta criada. Agora entre no sistema.'; document.getElementById('usuario').value = document.getElementById('cad-usuario').value; abaLogin.click(); } catch (erro) { document.getElementById('erro-cadastro').className = 'erro'; mostrarErro('erro-cadastro', erro); } };
 document.getElementById('form-login').onsubmit = async e => { e.preventDefault(); try { const dados = await api('/api/login', { method:'POST', body: JSON.stringify({ usuario: document.getElementById('usuario').value, senha: document.getElementById('senha').value }) }); token = dados.token; usuarioAtual = dados.usuario; sessionStorage.setItem('token', token); sessionStorage.setItem('usuarioAtual', JSON.stringify(usuarioAtual)); abrirSite(); } catch (erro) { mostrarErro('erro-login', erro); } };
 
-async function abrirSite() { document.getElementById('tela-acesso').style.display='none'; document.getElementById('site').style.display='block'; const tipo = usuarioAtual.tipo === 'dono' ? 'Dono' : usuarioAtual.tipo === 'gerente' ? 'Gerente' : 'Funcionário'; document.getElementById('nome-usuario').textContent = `${usuarioAtual.nome} (${tipo}) · CNPJ ${formatarCnpj(usuarioAtual.cnpj)}`; document.querySelectorAll('.gestor-only').forEach(el => el.style.display = ['dono','gerente'].includes(usuarioAtual.tipo) ? '' : 'none'); await carregarDados(); }
+async function abrirSite() { if (modalAcesso.open) modalAcesso.close(); document.getElementById('tela-acesso').style.display='none'; document.getElementById('site').style.display='block'; const tipo = usuarioAtual.tipo === 'dono' ? 'Dono' : usuarioAtual.tipo === 'gerente' ? 'Gerente' : 'Funcionário'; document.getElementById('nome-usuario').textContent = `${usuarioAtual.nome} (${tipo}) · CNPJ ${formatarCnpj(usuarioAtual.cnpj)}`; document.querySelectorAll('.gestor-only').forEach(el => el.style.display = ['dono','gerente'].includes(usuarioAtual.tipo) ? '' : 'none'); await carregarDados(); }
 async function carregarDados() { try { [notas, eventos, avaliacoes] = await Promise.all([api('/api/notas'), api('/api/eventos'), api('/api/resultados')]); mostrarNotas(); mostrarEventos(); atualizarResultados(); renderizarCalendario(); if (['dono','gerente'].includes(usuarioAtual.tipo)) mostrarPainel(); } catch (erro) { avisar(erro.message, 'erro'); } }
 if (token && usuarioAtual) abrirSite();
 
