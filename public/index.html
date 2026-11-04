@@ -139,7 +139,21 @@
           <div class="campo-nota"><div class="linha-campo"><label for="nota" class="titulo-campo">Nota para o ambiente de trabalho</label><strong><span id="valor-nota">7</span> / 10</strong></div><input id="nota" type="range" min="0" max="10" value="7"></div>
           <div><label for="comentario" class="titulo-campo">Comentário <small>(opcional)</small></label><textarea id="comentario" rows="5" placeholder="Escreva algo importante sobre o seu dia..."></textarea></div>
           <label class="check"><input id="anonimo" type="checkbox" checked> Manter este registro anônimo</label>
-          <button class="botao principal" type="submit">Salvar avaliação</button>
+          <div class="acoes-avaliacao">
+            <button class="botao principal" type="submit">
+              Salvar avaliação
+            </button>
+          
+            <button
+              id="remover-comentario"
+              class="botao secundario"
+              type="button"
+              hidden
+            >
+              Remover meu comentário
+            </button>
+          </div>
+          
         </form>
         <p id="mensagem-avaliacao" class="mensagem" role="status"></p>
       </section>

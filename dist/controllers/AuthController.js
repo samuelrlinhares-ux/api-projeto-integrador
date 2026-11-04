@@ -36,13 +36,27 @@ exports.AuthController = {
         }
     },
     async login(req, res) {
-        const conta = await ContaModel_1.ContaModel.buscarPorLogin(req.body.usuario?.trim().toLowerCase(), hash(req.body.senha || ''));
-        if (!conta)
-            return res.status(401).json({ erro: 'Usuário ou senha incorretos.' });
-        const token = crypto_1.default.randomBytes(24).toString('hex');
-        const usuario = { id: conta.id, nome: conta.nome, usuario: conta.usuario, tipo: conta.tipo, cnpj: conta.cnpj };
-        auth_1.sessoes.set(token, usuario);
-        res.json({ token, usuario });
+        try {
+            const conta = await ContaModel_1.ContaModel.buscarPorLogin(req.body.usuario?.trim().toLowerCase(), hash(req.body.senha || ''));
+            if (!conta)
+                return res.status(401).json({ erro: 'Usuário ou senha incorretos.' });
+            const token = crypto_1.default.randomBytes(24).toString('hex');
+            const usuario = { id: conta.id, nome: conta.nome, usuario: conta.usuario, tipo: conta.tipo, cnpj: conta.cnpj };
+            auth_1.sessoes.set(token, usuario);
+            res.json({ token, usuario });
+        }
+        catch (erro) {
+            console.error('ERRO NO LOGIN:', erro);
+            if (erro.code === 'ER_ACCESS_DENIED_ERROR')
+                return res.status(500).json({ erro: 'O MySQL recusou o usuário ou a senha. Confira DB_USER e DB_PASSWORD no arquivo .env.' });
+            if (erro.code === 'ER_BAD_DB_ERROR')
+                return res.status(500).json({ erro: 'O banco diario_trabalhador não existe neste MySQL. Rode o database/schema.sql.' });
+            if (erro.code === 'ER_NO_SUCH_TABLE')
+                return res.status(500).json({ erro: 'A tabela contas não existe no banco selecionado.' });
+            if (erro.code === 'ECONNREFUSED' || erro.code === 'PROTOCOL_CONNECTION_LOST')
+                return res.status(500).json({ erro: 'O MySQL não está ligado ou a conexão está incorreta.' });
+            res.status(500).json({ erro: `Erro do banco: ${erro.sqlMessage || erro.message || erro.code}` });
+        }
     },
     logout(req, res) { const token = req.headers.authorization?.replace('Bearer ', ''); if (token)
         auth_1.sessoes.delete(token); res.json({ ok: true }); }
