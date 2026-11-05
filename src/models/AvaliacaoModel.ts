@@ -67,13 +67,16 @@ export const AvaliacaoModel = {
       `
       DELETE FROM avaliacoes
       WHERE id = ?
-      AND conta_id = ?
+        AND conta_id = ?
       `,
       [id, contaId]
     );
   
     return (resultado as any).affectedRows > 0;
   },
+  
+  
+  
   
   async daEmpresa(cnpj: string) {
     const [linhas] = await banco.query(

@@ -62,9 +62,11 @@ function mostrarErro(id, erro) {
 function formatarCnpj(cnpj) {
   const numero = String(cnpj || '').replace(/\D/g, '');
 
-  return numero.length === 14
-    ? `${numero.slice(0, 2)}.${numero.slice(2, 5)}.${numero.slice(5, 8)}/${numero.slice(8, 12)}-${numero.slice(12)}`
-    : numero;
+  if (numero.length !== 14) {
+    return numero;
+  }
+
+  return `${numero.slice(0, 2)}.${numero.slice(2, 5)}.${numero.slice(5, 8)}/${numero.slice(8, 12)}-${numero.slice(12)}`;
 }
 
 function escapar(texto) {
@@ -201,15 +203,8 @@ async function abrirSite() {
   document.getElementById('tela-acesso').style.display = 'none';
   document.getElementById('site').style.display = 'block';
 
-  const tipo =
-    usuarioAtual.tipo === 'dono'
-      ? 'Dono'
-      : usuarioAtual.tipo === 'gerente'
-        ? 'Gerente'
-        : 'Funcionário';
-
   document.getElementById('nome-usuario').textContent =
-    `${usuarioAtual.nome} (${tipo}) · CNPJ ${formatarCnpj(usuarioAtual.cnpj)}`;
+    `${usuarioAtual.nome} · CNPJ ${formatarCnpj(usuarioAtual.cnpj)}`;
 
   document
     .querySelectorAll('.gestor-only')
@@ -241,7 +236,7 @@ async function carregarDados() {
     renderizarCalendario();
 
     if (['dono', 'gerente'].includes(usuarioAtual.tipo)) {
-      mostrarPainel();
+      await mostrarPainel();
     }
   } catch (erro) {
     avisar(erro.message, 'erro');
@@ -254,10 +249,19 @@ if (token && usuarioAtual) {
 
 document.getElementById('sair').onclick = async () => {
   try {
-    await api('/api/logout', {
-      method: 'POST'
+    await fetch('/api/logout', {
+      method: 'POST',
+      headers: {
+        Authorization: token
+          ? `Bearer ${token}`
+          : ''
+      }
     });
+  } catch (erro) {
+    console.warn('Não foi possível avisar o servidor sobre o logout.');
   } finally {
+    token = null;
+    usuarioAtual = null;
     sessionStorage.clear();
     location.reload();
   }
@@ -334,19 +338,16 @@ function atualizarBotaoRemoverComentario() {
     return;
   }
 
-  const avaliacaoComComentario = avaliacoes.find(
+  const comentario = avaliacoes.find(
     avaliacao =>
       avaliacao.comentario &&
       avaliacao.comentario.trim() !== ''
   );
 
-  if (avaliacaoComComentario) {
-    botao.hidden = false;
-    botao.dataset.id = avaliacaoComComentario.id;
-  } else {
-    botao.hidden = true;
-    botao.dataset.id = '';
-  }
+  botao.hidden = !comentario;
+  botao.dataset.id = comentario
+    ? comentario.id
+    : '';
 }
 
 const botaoRemoverComentario =
@@ -361,7 +362,7 @@ if (botaoRemoverComentario) {
     }
 
     const confirmou = confirm(
-      'Deseja remover seu comentário? A nota continuará salva.'
+      'Deseja excluir a avaliação e o comentário?'
     );
 
     if (!confirmou) {
@@ -373,9 +374,7 @@ if (botaoRemoverComentario) {
         method: 'DELETE'
       });
 
-      document.getElementById('comentario').value = '';
-
-      avisar('Comentário removido com sucesso.');
+      avisar('Avaliação removida com sucesso.');
 
       await carregarDados();
     } catch (erro) {
@@ -538,17 +537,21 @@ async function apagarEvento(id) {
 }
 
 function atualizarResultados() {
-  const comComentarios = avaliacoes.filter(
+  const avaliacoesExistentes = Array.isArray(avaliacoes)
+    ? avaliacoes
+    : [];
+
+  const comentarios = avaliacoesExistentes.filter(
     avaliacao =>
       avaliacao.comentario &&
-      avaliacao.comentario.trim() !== ''
+      String(avaliacao.comentario).trim() !== ''
   );
 
   document.getElementById('total-avaliacoes').textContent =
-    avaliacoes.length;
+    avaliacoesExistentes.length;
 
   document.getElementById('total-comentarios').textContent =
-    comComentarios.length;
+    comentarios.length;
 
   document.getElementById('total-registros').textContent =
     notas.length + eventos.length;
@@ -559,11 +562,12 @@ function atualizarResultados() {
   document.getElementById('contador-eventos').textContent =
     eventos.length;
 
-  const media = avaliacoes.length
-    ? avaliacoes.reduce(
-        (total, avaliacao) => total + avaliacao.nota,
+  const media = avaliacoesExistentes.length > 0
+    ? avaliacoesExistentes.reduce(
+        (total, avaliacao) =>
+          total + Number(avaliacao.nota || 0),
         0
-      ) / avaliacoes.length
+      ) / avaliacoesExistentes.length
     : 0;
 
   document.getElementById('media-avaliacoes').textContent =
@@ -572,6 +576,7 @@ function atualizarResultados() {
   atualizarBotaoRemoverComentario();
 }
 
+
 async function mostrarPainel() {
   if (!['dono', 'gerente'].includes(usuarioAtual.tipo)) {
     return;
@@ -579,49 +584,67 @@ async function mostrarPainel() {
 
   const dados = await api('/api/empresa');
 
-  const comentarios = dados.avaliacoes.filter(
+  const todasAvaliacoes = Array.isArray(dados.avaliacoes)
+    ? dados.avaliacoes
+    : [];
+
+  /*
+   * Só considera avaliações que ainda possuem comentário.
+   * Isso impede que apareçam:
+   *
+   * Registro anônimo
+   * Sem comentário.
+   *
+   * Também faz a média voltar para 0.0 quando não há comentários.
+   */
+  const avaliacoesValidas = todasAvaliacoes.filter(
     avaliacao =>
       avaliacao.comentario &&
-      avaliacao.comentario.trim()
+      String(avaliacao.comentario).trim() !== ''
   );
 
+  const funcionarios = Array.isArray(dados.funcionarios)
+    ? dados.funcionarios
+    : [];
+
   document.getElementById('total-usuarios').textContent =
-    dados.funcionarios.length;
+    funcionarios.length;
 
   document.getElementById('total-equipe').textContent =
-    dados.avaliacoes.length;
+    avaliacoesValidas.length;
 
   document.getElementById(
     'total-comentarios-equipe'
-  ).textContent = comentarios.length;
+  ).textContent = avaliacoesValidas.length;
 
-  const media = dados.avaliacoes.length
-    ? dados.avaliacoes.reduce(
-        (total, avaliacao) => total + avaliacao.nota,
+  const mediaEquipe = avaliacoesValidas.length > 0
+    ? avaliacoesValidas.reduce(
+        (total, avaliacao) =>
+          total + Number(avaliacao.nota || 0),
         0
-      ) / dados.avaliacoes.length
+      ) / avaliacoesValidas.length
     : 0;
 
   document.getElementById('media-equipe').textContent =
-    media.toFixed(1);
+    mediaEquipe.toFixed(1);
 
   document.getElementById('media-comentarios').textContent =
-    media.toFixed(1);
+    mediaEquipe.toFixed(1);
 
   document.getElementById('lista-usuarios').innerHTML =
-    dados.funcionarios
+    funcionarios
       .map(
-        usuario => `
+        funcionario => `
           <div class="usuario-item">
-            <b>${escapar(usuario.nome)}</b>
-            <small>@${escapar(usuario.usuario)}</small>
+            <b>${escapar(funcionario.nome)}</b>
+            <small>@${escapar(funcionario.usuario)}</small>
           </div>
         `
       )
       .join('') ||
     '<p>Nenhum funcionário cadastrado.</p>';
 
-  const registros = dados.avaliacoes
+  const registros = avaliacoesValidas
     .map(
       avaliacao => `
         <div class="registro-resumo">
@@ -634,12 +657,9 @@ async function mostrarPainel() {
           </strong>
 
           · ${formatarData(avaliacao.data)}
+          · Nota ${Number(avaliacao.nota || 0)}/10
 
-          <p>
-            ${escapar(
-              avaliacao.comentario || 'Sem comentário.'
-            )}
-          </p>
+          <p>${escapar(avaliacao.comentario)}</p>
         </div>
       `
     )
@@ -647,10 +667,10 @@ async function mostrarPainel() {
 
   document.getElementById('lista-registros').innerHTML =
     registros ||
-    '<p>Nenhuma avaliação recebida.</p>';
+    '<p>Nenhum registro com comentário.</p>';
 
   document.getElementById('lista-comentarios').innerHTML =
-    comentarios
+    avaliacoesValidas
       .map(
         avaliacao => `
           <article class="comentario-item">
@@ -664,7 +684,7 @@ async function mostrarPainel() {
 
             <small>
               · ${formatarData(avaliacao.data)}
-              · Nota ${avaliacao.nota}/10
+              · Nota ${Number(avaliacao.nota || 0)}/10
             </small>
 
             <p>${escapar(avaliacao.comentario)}</p>
@@ -808,29 +828,28 @@ document.getElementById('mes-proximo').onclick = () => {
   renderizarCalendario();
 };
 
-document.getElementById('baixar-dados').onclick =
-  async () => {
-    const dados = [
-      'dono',
-      'gerente'
-    ].includes(usuarioAtual.tipo)
-      ? await api('/api/empresa')
-      : null;
+document.getElementById('baixar-dados').onclick = async () => {
+  const dados = [
+    'dono',
+    'gerente'
+  ].includes(usuarioAtual.tipo)
+    ? await api('/api/empresa')
+    : null;
 
-    if (!dados) {
-      return;
+  if (!dados) {
+    return;
+  }
+
+  const arquivo = new Blob(
+    [JSON.stringify(dados, null, 2)],
+    {
+      type: 'application/json'
     }
+  );
 
-    const arquivo = new Blob(
-      [JSON.stringify(dados, null, 2)],
-      {
-        type: 'application/json'
-      }
-    );
+  const link = document.createElement('a');
 
-    const link = document.createElement('a');
-
-    link.href = URL.createObjectURL(arquivo);
-    link.download = 'relatorio-da-empresa.json';
-    link.click();
-  };
+  link.href = URL.createObjectURL(arquivo);
+  link.download = 'relatorio-da-empresa.json';
+  link.click();
+};

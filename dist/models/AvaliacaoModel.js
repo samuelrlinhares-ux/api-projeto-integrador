@@ -50,7 +50,7 @@ exports.AvaliacaoModel = {
         const [resultado] = await database_1.banco.execute(`
       DELETE FROM avaliacoes
       WHERE id = ?
-      AND conta_id = ?
+        AND conta_id = ?
       `, [id, contaId]);
         return resultado.affectedRows > 0;
     },
